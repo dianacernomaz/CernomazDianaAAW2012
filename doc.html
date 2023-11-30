@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<map name="harta">
+	<area shape="rect" coords="53,20,193,159" href="https://www.google.com/">
+</map><br>
+Ziua: <input type="text" id="zi"><br>
+Luna: <input type="text" id="luna"><br>
+Anul: <input type="text" id="an"><br><br>
+<input type="submit" onclick="afisare(parseInt(document.getElementById('an').value),parseInt(document.getElementById('luna').value),parseInt(document.getElementById('zi').value))">
+<br><input type="button" onclick="dupaNzile(parseInt(document.getElementById('an').value),parseInt(document.getElementById('luna').value),parseInt(document.getElementById('zi').value))" value="Ce data va fi peste N zile"> <br>
+<input type="button" onclick="afisareaVinerilor(parseInt(document.getElementById('an').value),parseInt(document.getElementById('luna').value),parseInt(document.getElementById('zi').value))" value="Vineri ale anului introdus"> <br>
+<input type="button" onclick="miercuri_din_anul_2023()" value="Miercuri ale anului 2023"> <br>
+<input type="button" onclick="diferenta_dintre_date('2004-05-02', '2021-10-01')" value="Diferenta dintre 2 date"> <br>
+    <input type="button" onclick="getTimeUntilEndOfDay()" value="Timp pana la sfarsit de zi"> <br> 
+
+
+
+
+<script type="text/javascript">
+	// C1) calcula vârsta în zile a unei persoane (data nașterii se dă)
+	function afisare(a,l,z){
+		let d=new Date(a,l,z);
+		let b=parseInt((2023-d.getFullYear())*365+(3-d.getMonth())*30+d.getDay());
+		alert("Varsta persoanei in zile = "+b);
+
+		// C2) calcula vârsta în ani a unei persoane (data nasterii se dă)
+		let varsta=parseInt(2023-d.getFullYear());
+		if(d.getMonth()<3) varsta--;
+		else if(d.getMonth()>3 && d.getDay()<9) varsta--;
+		else if (d.getMonth()==3 && d.getDay()<9) varsta--;
+		alert("Varsta persoanei in ani - "+varsta);
+
+		// C3) determina a câta zi în an este o anumita data precizată de utilizator
+		let nr_zilei = parseInt((d.getMonth()*30)+d.getDay());
+		console.log("Data precizata este a "+nr_zilei);
+	}
+
+	// C4) determina ce dată va fi peste N zile dupa data curentă (N se dă)
+	function dupaNzile(a,l,z) {
+		let d=new Date(a,l,z);
+		let N=parseInt(prompt("Dati nr de zile"));
+		d.setDate(d.getDate() + N);
+
+		while(d.getDate() > 30){
+			d.setMonth(d.getMonth() + 1);
+			d.setDate(d.getDate() - 30);
+			if(d.getMonth() > 11) {
+				d.setFullYear(d.getFullYear() + 1);
+				d.setMonth(0);
+			}
+		}
+
+		console.log("Dupa ",N," zile va fi data ",d.getFullYear(),"-",d.getMonth()+1,"-",d.getDate());
+	}
+	function afisareaVinerilor(a,l,z) {
+    const currentDateObj = new Date(a,l,z);
+    const year = currentDateObj.getFullYear();
+    const startDateObj = new Date(year, 0, 1);
+    const endDateObj = new Date(year, 11, 31);
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const fridaysOfYear = [];
+    for (let d = startDateObj; d <= endDateObj; d.setDate(d.getDate() + 1)) {
+      const dayOfWeek = daysOfWeek[d.getDay()];
+      if (dayOfWeek === 'Friday') {
+        fridaysOfYear.push(d.toISOString().substr(0, 10));
+      }
+    }
+    console.log('Toate vinerile din an: ');
+    console.log(fridaysOfYear)
+  }
+  // C6) Afișați datele de miercuri ale anului curent
+  function miercuri_din_anul_2023() {
+    const startDateObj = new Date(2023, 0, 1);
+    const endDateObj = new Date(2023, 11, 31);
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const wednesdaysOf2023 = [];
+    for (let d = startDateObj; d <= endDateObj; d.setDate(d.getDate() + 1)) {
+      const dayOfWeek = daysOfWeek[d.getDay()];
+      if (dayOfWeek === 'Wednesday') {
+        wednesdaysOf2023.push(d.toISOString().substr(0, 10));
+      }
+    }
+    console.log('Toate miercurile din an:')
+    console.log(wednesdaysOf2023);
+  }
+  // C7) Determinați diferența de zile între două date calendaristice date
+function diferenta_dintre_date(date1Str, date2Str) {
+    const date1Obj = new Date(date1Str);
+    const date2Obj = new Date(date2Str);
+    const diffInMilliseconds = Math.abs(date2Obj - date1Obj);
+    const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+    console.log(diffInDays.toFixed(0));
+  }
+  
+  // C8) Calculați câte ore și minute au rămas până la sfârșitul zilei curente
+  function getTimeUntilEndOfDay() {
+    const currentDateObj = new Date();
+    const endOfDayObj = new Date(currentDateObj);
+    endOfDayObj.setHours(23, 59, 59, 999);
+    const diffInMilliseconds = endOfDayObj - currentDateObj;
+    const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
+    const diffInMinutes = Math.floor((diffInMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+    console.log(`${diffInHours} ore si ${diffInMinutes} minute pana la sfarsit de zi`);
+  }
+</script>
+</body>
+</html>
